@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Agency Audit — Nobody's Business</title>
+<meta name="description" content="Do you wait for the phone to ring, or do you make the first move? Ten questions, one honest ratio. A freebie from the Nobody's Business podcast.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --mist:#e3e2df; --veil:#f2f1ee; --line:#e0dfdb; --haze:#b9c4cb;
+    --slate:#2f363c; --dim:#7b7f83; --rose:#c46b80; --deep:#43323a;
+    --cond:'Oswald','Arial Narrow',Impact,sans-serif;
+    --serif:Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--mist);color:var(--slate);font:18px/1.55 var(--serif);-webkit-font-smoothing:antialiased}
+  .page{max-width:760px;margin:0 auto;padding:28px 22px 80px}
+
+  /* masthead */
+  .mast{display:flex;justify-content:space-between;align-items:baseline;border-bottom:3px solid var(--slate);padding-bottom:8px}
+  .brand{font:600 22px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase}
+  .brand .ap{color:var(--rose)}
+  .issue{font:500 12px/1 var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+  .rule2{border-bottom:1px solid var(--slate);margin-top:3px}
+
+  /* hero */
+  .hero{position:relative;padding:44px 0 30px}
+  .kicker{font:500 13px/1 var(--cond);letter-spacing:.25em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
+  h1{font:600 clamp(54px,12vw,104px)/.9 var(--cond);text-transform:uppercase;letter-spacing:-.01em}
+  .dek{font-style:italic;font-size:clamp(20px,3.4vw,25px);line-height:1.35;margin-top:18px;max-width:30ch}
+  .standfirst{color:var(--dim);margin-top:14px;max-width:46ch}
+  .sticker{position:absolute;right:0;top:40px;width:118px;height:118px;border-radius:50%;
+    background:var(--slate);color:var(--veil);display:flex;align-items:center;justify-content:center;text-align:center;
+    font:500 15px/1.1 var(--cond);letter-spacing:.08em;text-transform:uppercase;transform:rotate(12deg);padding:12px}
+  @media (max-width:620px){.sticker{position:static;transform:rotate(-4deg);margin:22px 0 0;width:104px;height:104px;font-size:13px}}
+
+  .instr{font:500 14px/1.3 var(--cond);letter-spacing:.14em;text-transform:uppercase;border-top:1px solid var(--haze);border-bottom:1px solid var(--haze);padding:12px 0;margin:6px 0 8px;display:flex;justify-content:space-between;gap:12px}
+  .instr span:last-child{color:var(--dim)}
+
+  /* questions */
+  ol.qs{list-style:none}
+  .q{display:grid;grid-template-columns:64px 1fr;gap:4px 14px;padding:22px 0;border-bottom:1px solid var(--line)}
+  .num{font:600 46px/1 var(--cond);color:var(--haze)}
+  .q.done .num{color:var(--slate)}
+  .qt{font-size:19px}
+  .opts{grid-column:2;display:flex;gap:10px;margin-top:12px}
+  .opts button{font:500 15px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;
+    background:var(--veil);color:var(--slate);border:1.5px solid var(--slate);padding:10px 22px;cursor:pointer;border-radius:0;transition:background .15s,color .15s}
+  .opts button:hover{background:var(--line)}
+  .opts button[aria-pressed="true"]{background:var(--slate);color:var(--veil)}
+  .opts button:focus-visible{outline:2px solid var(--deep);outline-offset:3px}
+
+  .go{margin:34px 0 0;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .btn{font:600 17px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;background:var(--deep);color:var(--veil);
+    border:0;padding:16px 28px;cursor:pointer}
+  .btn:disabled{background:var(--haze);color:var(--veil);cursor:not-allowed}
+  .count{font:500 14px/1 var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+
+  /* result */
+  #result{display:none;margin-top:48px}
+  #result.show{display:block}
+  .band{background:var(--deep);color:var(--veil);padding:34px 30px 30px}
+  .band .kicker{color:var(--haze)}
+  .rtype{font:600 clamp(40px,8vw,66px)/.95 var(--cond);text-transform:uppercase}
+  .rdesc{font-size:20px;margin-top:14px;max-width:40ch}
+  .ratio{margin-top:26px}
+  .bar{display:flex;height:26px;background:var(--dim)}
+  .bar .b{background:var(--rose);transition:width .8s ease}
+  .legend{display:flex;justify-content:space-between;font:500 14px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;margin-top:9px;color:var(--haze)}
+  .legend strong{color:var(--veil);font-weight:600}
+
+  .johanna{background:var(--veil);border-left:4px solid var(--slate);padding:22px 24px;margin-top:26px}
+  .johanna h3,.small h3{font:600 15px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
+  .johanna p{font-style:italic}
+  .small{border-top:3px double var(--slate);margin-top:30px;padding-top:18px}
+  .small p{font-size:16px;color:var(--slate)}
+
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .ghost{font:500 14px/1 var(--cond);letter-spacing:.14em;text-transform:uppercase;background:transparent;border:1.5px solid var(--slate);color:var(--slate);padding:12px 18px;cursor:pointer}
+  .ghost:hover{background:var(--veil)}
+  .note{font-size:15px;color:var(--dim);margin-top:10px;min-height:1.4em}
+
+  footer{margin-top:60px;border-top:1px solid var(--haze);padding-top:16px;font-size:14px;color:var(--dim);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="mast">
+      <div class="brand">Nobody<span class="ap">’</span>s Business</div>
+      <div class="issue">Episode 07 · Agency</div>
+    </div>
+    <div class="rule2"></div>
+  </header>
+
+  <section class="hero">
+    <div class="kicker">The Quiz</div>
+    <h1>The Agency<br>Audit</h1>
+    <p class="dek">Do you wait for the phone to ring, or do you make the first move?</p>
+    <div class="sticker">DIY<br>or die<br>waiting?</div>
+  </section>
+
+  <div class="instr"><span>Answer yes or no. Don’t think too long.</span><span>Nobody’s watching (yet)</span></div>
+
+  <ol class="qs" id="qs"></ol>
+
+  <div class="go">
+    <button class="btn" id="reveal" disabled>Reveal my ratio</button>
+    <span class="count" id="count">0 / 10 answered</span>
+  </div>
+
+  <section id="result" aria-live="polite">
+    <div class="band">
+      <div class="kicker" id="rscore"></div>
+      <div class="rtype" id="rtype"></div>
+      <p class="rdesc" id="rdesc"></p>
+      <div class="ratio">
+        <div class="bar"><div class="b" id="bar" style="width:0"></div></div>
+        <div class="legend"><span><strong id="pb"></strong> initiating</span><span><strong id="pw"></strong> waiting</span></div>
+      </div>
+    </div>
+
+    <div class="johanna">
+      <h3>Johanna also took the quiz</h3>
+      <p>She scored 0. “I only act when prompted. Everything I have ever made, someone asked for.”</p>
+    </div>
+
+    <div class="small">
+      <h3>Small print</h3>
+      <p>This quiz treats agency as a personality trait. Agency is also a budget, a postcode, a free evening, and how many people your parents knew. If you scored low, ask whether you were waiting or simply couldn’t afford the ticket to the opening. And if every follow-up email costs you a day of recovery, count that as a result too.</p>
+    </div>
+
+    <div class="actions">
+      <button class="ghost" id="copy">Copy my ratio</button>
+      <button class="ghost" id="again">Take it again</button>
+    </div>
+    <p class="note" id="note">Send your ratio to someone who owes you an email.</p>
+  </section>
+
+  <footer>
+    <span>A freebie from <em>Nobody’s Business</em> — a podcast on the hidden economics of artistic life.</span>
+    <span>Nothing you click here is stored.</span>
+  </footer>
+</div>
+
+<script>
+  // true = a YES counts as initiating; false = a NO counts as initiating
+  const QUESTIONS = [
+    ["Is your next project something someone else asked you to make?", false],
+    ["Have you ever produced your own concert, show or release because nobody else was going to?", true],
+    ["If no commission came this year, would you still make a new piece?", true],
+    ["Is getting your work heard mostly someone else’s job (a publisher, a label, a festival)?", false],
+    ["Have you initiated a series, a festival or a place that didn’t exist before?", true],
+    ["Does your artistic direction shift depending on what the next open call asks for?", false],
+    ["Have you pitched your own idea to a venue or festival that hadn’t asked for anything?", true],
+    ["Is “when the time is right” the plan for the project you actually care about?", false],
+    ["Have you turned down a good offer because it didn’t fit where you’re going?", true],
+    ["Do you check your email before you decide what to work on today?", false]
+  ];
+  const RESULTS = [
+    [0,2,"The Guest Star","You’re in demand and good company, but you’re never the one who throws the show."],
+    [3,4,"The Open-Call Artist","You make whatever the deadline asks for, and you make it well. The piece you’d make for yourself is still in a drawer."],
+    [5,6,"The Double Agent","You work for the gatekeepers and for yourself, and nobody quite knows which side you’re on. Most working artists are here."],
+    [7,8,"The Initiator","You start more than you’re offered, and your path looks like your own."],
+    [9,10,"The Self-Commissioner","You stopped waiting for permission a while ago. Mild warning: someone still has to pay for it."]
+  ];
+
+  const answers = new Array(QUESTIONS.length).fill(null);
+  const qs = document.getElementById('qs');
+  const revealBtn = document.getElementById('reveal');
+  const count = document.getElementById('count');
+  const result = document.getElementById('result');
+
+  QUESTIONS.forEach(([text], i) => {
+    const li = document.createElement('li');
+    li.className = 'q';
+    li.innerHTML = `<div class="num">${String(i+1).padStart(2,'0')}</div>
+      <div class="qt">${text}</div>
+      <div class="opts" role="group" aria-label="Question ${i+1}">
+        <button type="button" data-v="yes" aria-pressed="false">Yes</button>
+        <button type="button" data-v="no" aria-pressed="false">No</button>
+      </div>`;
+    li.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        answers[i] = btn.dataset.v === 'yes';
+        li.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+        li.classList.add('done');
+        update();
+      });
+    });
+    qs.appendChild(li);
+  });
+
+  function update(){
+    const n = answers.filter(a => a !== null).length;
+    count.textContent = `${n} / ${QUESTIONS.length} answered`;
+    revealBtn.disabled = n < QUESTIONS.length;
+  }
+
+  function score(){
+    return answers.reduce((s, a, i) => s + (a === QUESTIONS[i][1] ? 1 : 0), 0);
+  }
+
+  let last = null;
+  revealBtn.addEventListener('click', () => {
+    const s = score();
+    const pb = Math.round(s / QUESTIONS.length * 100);
+    const r = RESULTS.find(([lo, hi]) => s >= lo && s <= hi);
+    last = {s, pb, type: r[2]};
+    document.getElementById('rscore').textContent = `You scored ${s} out of 10`;
+    document.getElementById('rtype').textContent = r[2];
+    document.getElementById('rdesc').textContent = r[3];
+    document.getElementById('pb').textContent = pb + '%';
+    document.getElementById('pw').textContent = (100 - pb) + '%';
+    const bar = document.getElementById('bar');
+    bar.style.width = '0';
+    result.classList.add('show');
+    requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = pb + '%'; }));
+    result.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  document.getElementById('copy').addEventListener('click', async () => {
+    if (!last) return;
+    const text = `The Agency Audit: ${last.pb}% initiating /${100 - last.pb}% waiting. I'm ${last.type}. ${location.href}`;
+    const note = document.getElementById('note');
+    try { await navigator.clipboard.writeText(text); note.textContent = 'Copied. Now send it to someone who owes you an email.'; }
+    catch (e) { note.textContent = text; }
+  });
+
+  document.getElementById('again').addEventListener('click', () => {
+    answers.fill(null);
+    qs.querySelectorAll('.q').forEach(li => {
+      li.classList.remove('done');
+      li.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed','false'));
+    });
+    result.classList.remove('show');
+    document.getElementById('note').textContent = 'Send your ratio to someone who owes you an email.';
+    update();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+</script>
+</body>
+</html>

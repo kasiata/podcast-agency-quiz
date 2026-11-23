@@ -65,7 +65,16 @@
   .band{background:var(--deep);color:var(--veil);padding:34px 30px 30px}
   .band .kicker{color:var(--haze)}
   .rtype{font:600 clamp(40px,8vw,66px)/.95 var(--cond);text-transform:uppercase}
-  .rdesc{font-size:20px;margin-top:14px;max-width:40ch}
+  .rdesc{font-size:19px;margin-top:14px;max-width:44ch}
+  .rdesc p+p{margin-top:10px}
+  .try{margin-top:18px;font-style:italic;max-width:44ch}
+  .try span:first-child{font:600 13px/1 var(--cond);font-style:normal;letter-spacing:.16em;text-transform:uppercase;color:var(--haze);margin-right:6px}
+  .notes{margin-top:30px}
+  .notes h3{font:600 15px/1 var(--cond);letter-spacing:.16em;text-transform:uppercase;margin-bottom:6px}
+  ol.lost{list-style:none}
+  ol.lost li{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:17px}
+  .ln{font:600 26px/1 var(--cond);color:var(--haze)}
+  ol.lost strong{font-weight:bold}
   .ratio{margin-top:26px}
   .bar{display:flex;height:26px;background:var(--dim)}
   .bar .b{background:var(--rose);transition:width .8s ease}
@@ -117,11 +126,17 @@
     <div class="band">
       <div class="kicker" id="rscore"></div>
       <div class="rtype" id="rtype"></div>
-      <p class="rdesc" id="rdesc"></p>
+      <div class="rdesc" id="rdesc"></div>
+      <p class="try"><span>Try this</span> <span id="rtry"></span></p>
       <div class="ratio">
         <div class="bar"><div class="b" id="bar" style="width:0"></div></div>
         <div class="legend"><span><strong id="pb"></strong> initiating</span><span><strong id="pw"></strong> waiting</span></div>
       </div>
+    </div>
+
+    <div class="notes">
+      <h3>Where you lost points</h3>
+      <ol class="lost" id="lost"></ol>
     </div>
 
     <div class="johanna">
@@ -161,12 +176,45 @@
     ["Have you turned down a good offer because it didn’t fit where you’re going?", true],
     ["Do you check your email before you decide what to work on today?", false]
   ];
+  // [min, max, name, analysis paragraphs, try this]
   const RESULTS = [
-    [0,2,"The Guest Star","You’re in demand and good company, but you’re never the one who throws the show."],
-    [3,4,"The Open-Call Artist","You make whatever the deadline asks for, and you make it well. The piece you’d make for yourself is still in a drawer."],
-    [5,6,"The Double Agent","You work for the gatekeepers and for yourself, and nobody quite knows which side you’re on. Most working artists are here."],
-    [7,8,"The Initiator","You start more than you’re offered, and your path looks like your own."],
-    [9,10,"The Self-Commissioner","You stopped waiting for permission a while ago. Mild warning: someone still has to pay for it."]
+    [0,0,"The Air Dancer",
+      ["You know the inflatable tube man waving outside a car dealership. That’s you: lots of energy, great moves, always in whichever direction the air is blowing. When someone switches off the fan, you fold over.",
+       "Bamboo bends with every wind as well, but it has roots."],
+      "Name one thing you would keep doing even if nobody turned the fan on."],
+    [1,2,"The Guest Star",
+      ["You’re reliable, skilled and easy to work with, and people keep inviting you. The catch is that your body of work maps other people’s ideas.",
+       "When the invitations slow down (a programmer retires, a fund changes its priorities), there’s nothing of your own to fall back on."],
+      "Make one small thing this month that nobody asked for. A house concert counts."],
+    [3,4,"The Open-Call Artist",
+      ["You read briefs better than most curators write them, and you deliver to deadline. Your work is good, but the deadlines decide its shape.",
+       "The piece in the drawer is probably the one people would remember you for."],
+      "Write the open call for your drawer piece, with a title, a budget and a deadline, and send it to yourself."],
+    [5,6,"The Double Agent",
+      ["You take commissions and start your own things, and one probably pays for the other. Most working artists are here.",
+       "This is the most sustainable position in the quiz and the hardest to keep balanced. A bad year pushes you towards waiting. A good year makes you say yes to everything."],
+      "Look at your last three projects and check which side each one came from."],
+    [7,8,"The Initiator",
+      ["You start things, and your path is recognisably yours.",
+       "The risk is that you become your own producer, fundraiser and marketing department, and the time for making work gets squeezed."],
+      "Count the hours you spent last month making work, and the hours spent making it possible."],
+    [9,10,"The Self-Commissioner",
+      ["You stopped asking for permission a long time ago. Some people see you as a force, some as competition, and a few funders find you exhausting.",
+       "The risks are isolation, burnout and the bill."],
+      "Let someone else start something, and simply join in."]
+  ];
+  // shown only for questions that scored a waiting point
+  const NOTES = [
+    ["Your next project was someone else’s idea.", "Being asked is a sign of trust, so enjoy it. Just check whether anything on your list is entirely yours."],
+    ["You’ve never produced your own event.", "Self-producing costs money, time and a tolerance for empty chairs. If you couldn’t afford it, that’s your circumstances. If it never occurred to you, now it has."],
+    ["No commission, no new piece.", "Fair enough, rent exists. But if no money means no music, funders’ calendars decide your output."],
+    ["Others get your work heard.", "Publishers and labels are useful, and they also have forty other artists. Who talks about your work when they’re busy?"],
+    ["You haven’t initiated a series or a place.", "Not everyone needs to run a festival, and most people who do would think twice. A small recurring evening counts."],
+    ["Your direction shifts with the open calls.", "Adapting is a skill. If you lined up your last five applications, would a stranger see one artist or five?"],
+    ["You’ve never pitched unasked.", "Many programmers ignore unsolicited proposals. The ones that get through are short, specific and arrive before the season is planned."],
+    ["“When the time is right.”", "The time is rarely right, and a date in the calendar helps. Give the project a date, even a made-up one."],
+    ["You’ve never turned down a good offer.", "Early in a career, saying no is often unaffordable. Later, it becomes the main way you shape your path."],
+    ["Email before work.", "Everyone does it. But whoever owns your first hour sets the agenda for the day, and if that’s your inbox, the inbox runs your day."]
   ];
 
   const answers = new Array(QUESTIONS.length).fill(null);
@@ -213,7 +261,13 @@
     last = {s, pb, type: r[2]};
     document.getElementById('rscore').textContent = `You scored ${s} out of 10`;
     document.getElementById('rtype').textContent = r[2];
-    document.getElementById('rdesc').textContent = r[3];
+    const desc = document.getElementById('rdesc');
+    desc.innerHTML = r[3].map(p => `<p>${p}</p>`).join('');
+    document.getElementById('rtry').textContent = r[4];
+    const lost = answers.map((a, i) => a === QUESTIONS[i][1] ? null : i).filter(i => i !== null);
+    document.getElementById('lost').innerHTML = lost.length
+      ? lost.map(i => `<li><span class="ln">${String(i+1).padStart(2,'0')}</span><div><strong>${NOTES[i][0]}</strong> ${NOTES[i][1]}</div></li>`).join('')
+      : `<li><span class="ln">—</span><div><strong>No notes.</strong> Suspicious. Please retake, honestly.</div></li>`;
     document.getElementById('pb').textContent = pb + '%';
     document.getElementById('pw').textContent = (100 - pb) + '%';
     const bar = document.getElementById('bar');
